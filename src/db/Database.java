@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public class Database {
     private static ArrayList<Entity> entities = new ArrayList<>();
-    private static int firstId = 0;
+    private static int firstId = 1;
 
     public static void add(Entity e) {
         entities.add(e);
