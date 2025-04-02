@@ -9,8 +9,13 @@ public class Database {
     private static int firstId = 1;
 
     public static void add(Entity e) {
-        entities.add(e);
-        e.id = ++firstId;
+        e.id = firstId;
+        try {
+            entities.add(e.clone());
+        } catch (CloneNotSupportedException ex) {
+            System.out.println("copying failed!");
+        }
+        firstId++;
     }
 
     public static Entity get(int id) throws EntityNotFoundException {
