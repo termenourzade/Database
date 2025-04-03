@@ -20,29 +20,44 @@ public class Database {
 
     public static Entity get(int id) throws EntityNotFoundException {
         for (Entity entity : entities) {
-            if (entity.id == id)
-                return entity;
+            if (entity.id == id) {
+                try {
+                    return entity.clone();
+                } catch (CloneNotSupportedException ex) {
+                    throw new RuntimeException("copying failed!", ex);
+                }
+            }
         }
         throw new EntityNotFoundException(id);
     }
 
-    public static void delete(int id) {
-        Entity toDelete = get(id);
-        entities.remove(toDelete);
-    }
-
-    public static void update(Entity e) throws EntityNotFoundException {
-        boolean found = false;
-        for (Entity entity : entities) {
-            if (entity.id == e.id) {
-                entity.id = e.id;
-                found = true;
-                break;
+    public static void delete(int id) throws EntityNotFoundException{
+        for (int i = 0; i < entities.size(); i++) {
+            Entity entity = entities.get(i);
+            if (entity.id == id) {
+                entities.remove(i);
+                return;
             }
         }
-        if (!found) {
-            throw new EntityNotFoundException(e.id);
-        }
+        throw new EntityNotFoundException(id);
     }
 
-}
+        public static void update (Entity e) throws EntityNotFoundException {
+            boolean found = false;
+            for (int i = 0; i < entities.size(); i++) {
+                Entity entity = entities.get(i);
+                if (entity.id == e.id) {
+                    try {
+                        entities.set(i, e.clone());
+                        found = true;
+                    } catch (CloneNotSupportedException ex) {
+                        throw new RuntimeException("copying failed!", ex);
+                    }
+                    break;
+                }
+            }
+            if (!found) {
+                throw new EntityNotFoundException(e.id);
+            }
+        }
+    }
